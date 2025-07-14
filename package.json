@@ -8,7 +8,7 @@
     "predeploy": "pnpm run build",
     "deploy": "gh-pages -d dist",
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -20,9 +20,11 @@
     "@mui/material": "^7.0.1",
     "@mui/styled-engine": "^7.0.1",
     "@mui/styled-engine-sc": "^7.0.1",
+    "@vitejs/plugin-react": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "styled-components": "^6.1.17"
+    "styled-components": "^6.1.17",
+    "vite": "^5.4.19"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
