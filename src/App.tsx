@@ -2,9 +2,6 @@ import { Box, Typography, IconButton, Stack } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import { keyframes } from '@emotion/react';
-import { injectSpeedInsights } from "@vercel/speed-insights"
-
-injectSpeedInsights()
 
 const bounce = keyframes`
   0%, 100% {
