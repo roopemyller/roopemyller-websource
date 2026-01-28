@@ -61,6 +61,38 @@ button:hover {
   box-shadow: 0 6px 24px rgba(31, 125, 83, 0.6);
   transform: translateY(-2px);
 }
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+button:disabled:hover {
+  background: linear-gradient(135deg, var(--medium) 0%, var(--bright) 100%);
+  box-shadow: 0 4px 16px rgba(31, 125, 83, 0.4);
+  transform: none;
+}
+.successMessage {
+  color: var(--bright);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 0.8rem;
+  background: rgba(31, 125, 83, 0.2);
+  border-radius: 0.7rem;
+  border: 2px solid var(--bright);
+  text-align: center;
+}
+.errorMessage {
+  color: #ff6b6b;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 0.8rem;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 0.7rem;
+  border: 2px solid #ff6b6b;
+  text-align: center;
+}
 .socials {
   display: flex;
   justify-content: center;
@@ -70,17 +102,30 @@ button:hover {
 }
 .socials a {
   color: var(--bright);
+  background: rgba(31, 125, 83, 0.18); /* subtle green background for contrast */
+  border-radius: 50%;
+  border: 2px solid var(--medium);
+  box-shadow: 0 2px 8px rgba(24, 35, 15, 0.12);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: var(--font-main);
   font-size: 2.2rem;
-  border-bottom: 2px solid var(--medium);
-  padding-bottom: 2px;
+  padding: 0.35em;
+  margin-bottom: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .socials a:hover {
   color: var(--text-invert);
   border-color: var(--bright);
   text-shadow: 0 0 16px rgba(31, 125, 83, 0.9);
   transform: translateY(-4px) scale(1.1);
+}
+
+.captchaContainer {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0;
 }
 
 @media (max-width: 600px) {

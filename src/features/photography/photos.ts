@@ -12,9 +12,7 @@ export interface Photo {
  */
 const photos: Photo[] = [
   // Add your photo objects here
-  { src: "/photo1.jpg", alt: "Sunset over the mountains" },
-  { src: "/photo2.jpg", alt: "City lights at night" },
-  { src: "/photo3.jpg", alt: "Portrait in natural light" },
+  { src: "/photo1.jpg", alt: "To be added" },
 ];
 
 export default photos;

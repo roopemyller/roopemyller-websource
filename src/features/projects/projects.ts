@@ -16,7 +16,7 @@ const projects: Project[] = [
   {
     title: "movie-decider",
     description:
-      "React Applicaiton for a Hackathon. Project idea: Movie Decider",
+      "React Application for a Hackathon. Project idea: Movie Decider",
     image: "https://opengraph.githubassets.com/1/Jepunen/movie-decider",
     link: "https://github.com/Jepunen/movie-decider",
   },

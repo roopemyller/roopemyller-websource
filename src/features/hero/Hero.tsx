@@ -21,7 +21,7 @@ const Hero: React.FC = React.memo(() => (
                 height={160}
             />
             <h1 tabIndex={0}>Roope Myller</h1>
-            <h2>Software Engineering Student</h2>
+            <h2>Software Engineering Student @ LUT University</h2>
             <h2>Freelance Photographer</h2>
             <p>
                 Studying software engineering, building modern web apps, and capturing the world through my lens. Keyboard goes clickity-clackity...
