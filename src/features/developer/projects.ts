@@ -1,6 +1,3 @@
-/**
- * Project type for portfolio projects.
- */
 export interface Project {
   title: string;
   description: string;
@@ -8,24 +5,21 @@ export interface Project {
   link: string;
 }
 
-/**
- * Array of projects for the portfolio section.
- * Replace with your real data.
- */
 const projects: Project[] = [
+  {
+    title: "roopemyller-websource",
+    description:
+      "Vibe coded with Claude Code, Website for me, my photography portfolio and shooting sports page. Built with React, TypeScript, and Framer Motion.",
+    image:
+      "https://opengraph.githubassets.com/1/roopemyller/roopemyller-websource",
+    link: "https://github.com/roopemyller/roopemyller-websource",
+  },
   {
     title: "movie-decider",
     description:
       "React Application for a Hackathon. Project idea: Movie Decider",
     image: "https://opengraph.githubassets.com/1/Jepunen/movie-decider",
     link: "https://github.com/Jepunen/movie-decider",
-  },
-  {
-    title: "metsa-myller-websource",
-    description: "React Website for my father's forestry business.",
-    image:
-      "https://opengraph.githubassets.com/1/roopemyller/metsa-myller-websource",
-    link: "https://github.com/roopemyller/metsa-myller-websource",
   },
   {
     title: "kanban-react-node-AWA",

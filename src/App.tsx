@@ -1,35 +1,29 @@
-
 import './App.css';
+import { ModeProvider, useMode } from './app/ModeContext';
+import Curtain from './app/Curtain';
 import Navigation from './features/navigation/Navigation';
-import Hero from './features/hero/Hero';
-import About from './features/about/About';
-import Projects from './features/projects/Projects';
-// import Photography from './features/photography/Photography';
+import DeveloperMode from './features/developer/DeveloperMode';
+import PhotographyMode from './features/photography/PhotographyMode';
+import ShootingMode from './features/shooting/ShootingMode';
 import Contact from './features/contact/Contact';
+
+function ModeContent() {
+  const { mode } = useMode();
+
+  if (mode === 'photography') return <PhotographyMode />;
+  if (mode === 'shooting') return <ShootingMode />;
+  return <DeveloperMode />;
+}
 
 export default function App() {
   return (
-    <>
+    <ModeProvider>
+      <Curtain />
       <Navigation />
       <div className="app-container">
-        <section id="hero">
-          <Hero />
-        </section>
-        <section id="about">
-          <About />
-        </section>
-        <section id="projects">
-          <Projects />
-        </section>
-        {/*}
-        <section id="photography">
-          <Photography />
-        </section>
-        */}
-        <section id="contact">
-          <Contact />
-        </section>
+        <ModeContent />
+        <Contact />
       </div>
-    </>
+    </ModeProvider>
   );
 }

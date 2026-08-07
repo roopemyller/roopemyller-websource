@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Full-resolution photo originals — kept locally for your own archive,
+# not committed (web gallery uses the optimized copies in public/photos/).
+/photos-originals
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

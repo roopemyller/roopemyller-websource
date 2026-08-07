@@ -1,3 +1,60 @@
-# roopemyller.fi websource
+# roopemyller.fi
 
-page under construction
+Source for my personal site, [roopemyller.fi](https://roopemyller.fi). It's a single-page portfolio built with React, TypeScript, Vite, and Framer Motion — no router, no backend. The whole site renders as three switchable **modes** (Developer / Photography / SRA shooting), each showcasing a different side of what I do, with its own theme, copy, and sections.
+
+Each mode is a shareable link via `?mode=photography` / `?mode=shooting` (Developer is the default).
+
+## Tech stack
+
+- React 19 + TypeScript
+- Vite 6
+- Framer Motion for animation/transitions
+- Web3Forms + hCaptcha for the contact form
+- Self-hosted fonts via `@fontsource/*`
+
+## Getting started
+
+Package manager is **pnpm**.
+
+```bash
+pnpm install
+pnpm dev       # start the dev server
+```
+
+Other useful commands:
+
+```bash
+pnpm build        # production build to dist/ (does not type-check)
+npx tsc --noEmit  # type-check
+pnpm preview      # serve the production build locally
+pnpm lint         # ESLint
+```
+
+### Environment variables
+
+Create a `.env.local` with:
+
+```
+VITE_WEB3FORMS_ACCESS_KEY=...
+VITE_HCAPTCHA_SITE_KEY=...
+```
+
+Both are required for the contact form to submit. They're baked into the client bundle at build time, so a rebuild is needed after changing them.
+
+## Deployment
+
+The site deploys to **Vercel**, building via `vercel.json`.
+
+## Project structure
+
+```
+src/
+  app/          mode registry, mode context/provider, mount transition
+  components/   shared UI reused across 2+ modes (Gallery, Lightbox, StatCounter, SectionReveal)
+  features/     one folder per section, colocated with its styles and data
+    developer/  hero/about (shared) + career, academics, projects, stats
+    photography/
+    shooting/
+```
+
+See `CLAUDE.md` for a deeper dive into the architecture and conventions.

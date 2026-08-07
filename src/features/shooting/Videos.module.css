@@ -1,0 +1,90 @@
+.videos {
+  padding: 4rem 2rem 5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.videos h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: center;
+  color: var(--text-main);
+  margin: 0 0 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.card {
+  background: var(--surface);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  box-shadow: 0 0 0 1px var(--border);
+  border-left: 3px solid var(--accent);
+  overflow: hidden;
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  aspect-ratio: 16 / 9;
+  background: var(--surface-alt);
+  color: var(--text-secondary);
+  font-size: 1.6rem;
+}
+
+.placeholder span {
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.caption {
+  margin: 0;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.channelLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: transform var(--transition-fast);
+}
+
+.channelLink:hover,
+.channelLink:focus-visible {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .videos {
+    padding: 2rem 1rem 3rem;
+  }
+}
