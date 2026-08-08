@@ -77,15 +77,9 @@ export const MODES: Record<Mode, ModeMeta> = {
       "From portraits to landscapes — always chasing the right light and the moment worth keeping.",
     aboutHeading: "Behind the Lens",
     aboutBio:
-      "I shoot freelance alongside my studies — portraits, events, and landscapes. I care about natural light, honest moments, and images that hold up printed as large as they do on a phone screen.",
+      "I shoot freelance alongside my studies — portraits, events, sports and landscapes. I care about natural light, honest moments, and images that remind you of the special moments in life.",
     aboutChipsLabel: "Focus areas",
-    aboutChips: [
-      "Portraits",
-      "Events",
-      "Landscape",
-      "Editing",
-      "Film-inspired color",
-    ],
+    aboutChips: ["Portraits", "Events", "Sports", "Landscape"],
     contactPrompt: "Interested in a shoot or prints?",
     sections: [
       { id: "hero", label: "Home" },

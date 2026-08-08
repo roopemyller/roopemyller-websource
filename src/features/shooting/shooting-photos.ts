@@ -1,11 +1,36 @@
 import type { Photo } from '../../components/Gallery/types';
 
-// Placeholder gallery — swap these src values for real match/action photos later.
 const shootingPhotos: Photo[] = [
-  { src: 'https://picsum.photos/seed/roope-shoot-1/800/1000', alt: 'Placeholder shooting photo 1', category: 'stage' },
-  { src: 'https://picsum.photos/seed/roope-shoot-2/1200/800', alt: 'Placeholder shooting photo 2', category: 'podium' },
-  { src: 'https://picsum.photos/seed/roope-shoot-3/900/1200', alt: 'Placeholder shooting photo 3', category: 'gear' },
-  { src: 'https://picsum.photos/seed/roope-shoot-4/1200/750', alt: 'Placeholder shooting photo 4', category: 'stage' },
+  {
+    src: '/photos/roope_ampuu_pistooli_1.jpg',
+    alt: 'Shooter performing a one-handed pistol reload at a snowy range',
+    category: 'pistol',
+  },
+  {
+    src: '/photos/roope_ampuu_kivaari_1.jpg',
+    alt: 'Shooter firing a rifle at an outdoor winter range, spent casing ejecting mid-air',
+    category: 'rifle',
+  },
+  {
+    src: '/photos/roope_ampuu_pistooli_pov_2.jpg',
+    alt: 'First-person view aiming a pistol with both hands at forest targets in bright sunlight',
+    category: 'pov',
+  },
+  {
+    src: '/photos/roope_ampuu_kivaari_pov_1.jpg',
+    alt: 'First-person view down a rifle red dot sight toward targets on a summer range',
+    category: 'pov',
+  },
+  {
+    src: '/photos/roope_ampuu_pistooli_pov_1.jpg',
+    alt: 'First-person view aiming a pistol with both hands at a numbered practical shooting bay',
+    category: 'pov',
+  },
+  {
+    src: '/photos/roope_ampuu_kivaari_pov_2.jpg',
+    alt: 'First-person view aiming a rifle from a vehicle doorway toward a target stand',
+    category: 'pov',
+  },
 ];
 
 export default shootingPhotos;

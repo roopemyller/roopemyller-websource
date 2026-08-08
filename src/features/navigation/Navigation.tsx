@@ -61,11 +61,15 @@ export default function Navigation() {
     });
   };
 
-  // The transitionend listener below is attached once and must always call the
-  // current activeSectionId's measurement, not whatever was in scope when it
-  // was registered — route it through a ref so it never runs a stale closure.
+  // The transitionend and resize listeners below are attached once and must
+  // always call the current measurement functions, not whatever was in scope
+  // when they were registered — route them through refs so they never run a
+  // stale closure (e.g. the resize listener re-measuring the pill against the
+  // initial-render `mode` instead of the current one).
   const updateUnderlineRectRef = useRef(updateUnderlineRect);
   updateUnderlineRectRef.current = updateUnderlineRect;
+  const updatePillRectRef = useRef(updatePillRect);
+  updatePillRectRef.current = updatePillRect;
 
   useLayoutEffect(() => {
     updatePillRect();
@@ -95,12 +99,11 @@ export default function Navigation() {
 
   useEffect(() => {
     const handleResize = () => {
-      updatePillRect();
-      updateUnderlineRect();
+      updatePillRectRef.current();
+      updateUnderlineRectRef.current();
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

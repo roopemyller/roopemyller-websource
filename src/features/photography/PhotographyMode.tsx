@@ -37,7 +37,7 @@ export default function PhotographyMode() {
           <div className={styles.portfolioLinkWrap}>
             <a
               className={styles.portfolioLink}
-              href="https://roopemyller.pixieset.com/portfolioroopemylle/"
+              href="https://roopemyller.pixieset.com/portfolioroopemyller/"
               target="_blank"
               rel="noopener noreferrer"
             >

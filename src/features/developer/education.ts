@@ -2,6 +2,7 @@ export interface EducationEntry {
   institution: string;
   degree: string;
   period: string;
+  badge?: string;
   details?: string[];
   thesis?: {
     title: string;
@@ -15,9 +16,16 @@ export interface EducationEntry {
 export const education: EducationEntry[] = [
   {
     institution: 'LUT University',
+    degree: 'Master of Science (Technology), Software Engineering and Digital Transformation',
+    period: 'Aug 2025 – present',
+    badge: 'In Progress',
+    details: ['Grade: 4.73', '70/120 ECTS completed (58%)', 'Minor: Electronics'],
+  },
+  {
+    institution: 'LUT University',
     degree: 'Bachelor of Science (Technology), Software Engineering',
     period: 'Aug 2022 – May 2025',
-    details: ['Grade: 4.12', 'Minor: Electronics'],
+    details: ['Grade: 4.12', '180 ECTS', 'Minor: Electronics'],
     thesis: {
       title:
         'Dronejen avoimen lähdekoodin lennonohjausohjelmistojen nykytila ja teknologiset mahdollisuudet',
@@ -34,15 +42,15 @@ export const education: EducationEntry[] = [
 export const upcomingThesis = {
   period: 'Academic year 2026 – 2027',
   description:
-    "Topic still open. I'd like to continue where my bachelor's thesis left off — open-source drone flight-control software — and pull it in a defence-tech direction. My bachelor's thesis was a survey; the master's should be a research contribution — something I build, test, or measure. A few directions I'm considering:",
+    "Topic still open — likely building on my bachelor's thesis (open-source drone flight-control software), pushed toward defence-tech and something I actually build or test, not just survey. Directions I'm eyeing:",
   directions: [
-    'Resilience and security of open-source flight-control software in contested environments — GPS-denial, jamming resistance, RF spoofing detection, and failsafe behavior under signal loss.',
-    'GNSS-independent autonomous navigation — vision-based or inertial navigation as a module for an open-source flight-control stack, tested in simulation or on a real airframe.',
-    'Swarm and low-cost expendable drone coordination, relevant to the low-cost FPV / one-way drone trend.',
-    'Firmware security auditing of open-source flight-control code — attack surface and supply-chain risk analysis.',
+    'GPS-denial resilience & jamming/spoofing detection for flight controllers',
+    'GNSS-free navigation (vision or inertial) for autonomous flight',
+    'Low-cost swarm / one-way drone coordination',
+    'Firmware security auditing of flight-control code',
   ],
   seekingNote:
-    "I'm currently looking for a company in the defence-tech / counter-drone space that would like to take me on as a thesis worker in this area — get in touch via the contact section below if that's you.",
+    "Looking for a defence-tech / counter-drone company to host this as a thesis project — get in touch via Contact below.",
 };
 
 export default education;

@@ -35,12 +35,13 @@ export default function Academics() {
         {education.map((entry, idx) => (
           <motion.article
             key={entry.institution + entry.period}
-            className={styles.card}
+            className={`${styles.card} ${entry.badge ? styles.upcoming : ''}`}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, delay: (idx + 1) * 0.06, ease: [0.16, 1, 0.3, 1] }}
           >
+            {entry.badge && <span className={styles.badge}>{entry.badge}</span>}
             <h3>{entry.institution}</h3>
             <p className={styles.degree}>{entry.degree}</p>
             <p className={styles.period}>{entry.period}</p>

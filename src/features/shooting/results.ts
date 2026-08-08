@@ -68,6 +68,14 @@ const results: CompetitionResult[] = [
     placement: "5th (84.53%)",
     date: "2025-05-25",
   },
+  {
+    id: "2024-sra-taipalsaari",
+    discipline: "SRA",
+    division: "OPEN",
+    eventName: "SRA Taipalsaari",
+    placement: "30th (49.38%)",
+    date: "2024-06-01",
+  },
 ];
 
 export default results;
