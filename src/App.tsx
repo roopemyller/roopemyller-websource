@@ -1,35 +1,60 @@
-
 import './App.css';
+import { lazy, Suspense } from 'react';
+import { LazyMotion, domAnimation } from 'framer-motion';
+import { ModeProvider, useMode } from './app/ModeContext';
+import { ConsentProvider, useConsent } from './app/consent';
+import Analytics from './app/Analytics';
+import Curtain from './app/Curtain';
+import CookieBanner from './components/CookieBanner/CookieBanner';
 import Navigation from './features/navigation/Navigation';
-import Hero from './features/hero/Hero';
-import About from './features/about/About';
-import Projects from './features/projects/Projects';
-// import Photography from './features/photography/Photography';
+import DeveloperMode from './features/developer/DeveloperMode';
 import Contact from './features/contact/Contact';
+
+// Developer is the default mode and renders on first paint; the other two are
+// split out so their Gallery/Lightbox/icon payload isn't in the initial bundle.
+// The curtain covers the swap, so a null fallback is invisible.
+const PhotographyMode = lazy(() => import('./features/photography/PhotographyMode'));
+const ShootingMode = lazy(() => import('./features/shooting/ShootingMode'));
+
+function ModeContent() {
+  const { mode } = useMode();
+
+  if (mode === 'photography') return <PhotographyMode />;
+  if (mode === 'shooting') return <ShootingMode />;
+  return <DeveloperMode />;
+}
+
+function SiteFooter() {
+  const { openPreferences } = useConsent();
+  return (
+    <footer className="site-footer">
+      <span>© {new Date().getFullYear()} Roope Myller</span>
+      <a href="/privacy.html">Privacy</a>
+      <button type="button" className="site-footer__link" onClick={openPreferences}>
+        Cookie settings
+      </button>
+    </footer>
+  );
+}
 
 export default function App() {
   return (
-    <>
-      <Navigation />
-      <div className="app-container">
-        <section id="hero">
-          <Hero />
-        </section>
-        <section id="about">
-          <About />
-        </section>
-        <section id="projects">
-          <Projects />
-        </section>
-        {/*}
-        <section id="photography">
-          <Photography />
-        </section>
-        */}
-        <section id="contact">
-          <Contact />
-        </section>
-      </div>
-    </>
+    <LazyMotion features={domAnimation} strict>
+      <ConsentProvider>
+        <ModeProvider>
+          <Curtain />
+          <Navigation />
+          <div className="app-container">
+            <Suspense fallback={null}>
+              <ModeContent />
+            </Suspense>
+            <Contact />
+            <SiteFooter />
+          </div>
+          <CookieBanner />
+          <Analytics />
+        </ModeProvider>
+      </ConsentProvider>
+    </LazyMotion>
   );
 }

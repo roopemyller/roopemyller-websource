@@ -1,33 +1,52 @@
-
+import { m, useReducedMotion, type Variants } from 'framer-motion';
+import { useMode } from '../../app/ModeContext';
+import { EASE_OUT } from '../../app/motion';
 import styles from './Hero.module.css';
-import React from 'react';
 
+const containerVariants: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+};
 
-/**
- * Hero section for landing page.
- * Displays avatar, name, and tagline.
- *
- * @component
- * @returns {JSX.Element}
- */
-const Hero: React.FC = React.memo(() => (
-    <section className={styles.hero} aria-label="Hero section">
-        <div className={styles.content}>
-            <img
-                src="https://avatars.githubusercontent.com/u/22277901?v=4"
-                alt="Portrait of Roope Myller"
-                className={styles.avatar}
-                width={160}
-                height={160}
-            />
-            <h1 tabIndex={0}>Roope Myller</h1>
-            <h2>Software Engineering Student @ LUT University</h2>
-            <h2>Freelance Photographer</h2>
-            <p>
-                Studying software engineering, building modern web apps, and capturing the world through my lens. Keyboard goes clickity-clackity...
-            </p>
-        </div>
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_OUT } },
+};
+
+export default function Hero() {
+  const { meta } = useMode();
+  const reduceMotion = useReducedMotion();
+  // One place to branch on reduced motion instead of a ternary per element.
+  const item = reduceMotion ? undefined : itemVariants;
+
+  return (
+    <section className={styles.hero} id="hero" aria-label="Hero section">
+      <m.div
+        className={styles.content}
+        initial={reduceMotion ? false : 'hidden'}
+        animate={reduceMotion ? false : 'visible'}
+        variants={reduceMotion ? undefined : containerVariants}
+      >
+        <m.img
+          variants={item}
+          src="/avatar.jpg"
+          alt="Portrait of Roope Myller"
+          className={styles.avatar}
+          width={160}
+          height={160}
+          fetchPriority="high"
+        />
+        <m.p variants={item} className={styles.eyebrow}>
+          {meta.heroEyebrow}
+        </m.p>
+        <m.h1 variants={item} tabIndex={0}>
+          {meta.heroTitle}
+        </m.h1>
+        <m.h2 variants={item}>{meta.heroSubtitle}</m.h2>
+        <m.p variants={item} className={styles.tagline}>
+          {meta.heroTagline}
+        </m.p>
+      </m.div>
     </section>
-));
-
-export default Hero;
+  );
+}
