@@ -95,6 +95,25 @@
   text-align: center;
 }
 
+.captchaBlocked {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.captchaBlocked button {
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .privacyNote {
   margin: 0.25rem 0 0;
   font-size: 0.8rem;

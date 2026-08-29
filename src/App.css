@@ -119,13 +119,23 @@ body::before {
   border-top: 1px solid var(--border);
 }
 
-.site-footer a {
+.site-footer a,
+.site-footer__link {
   color: var(--text-secondary);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-.site-footer a:hover {
+.site-footer__link {
+  font: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.site-footer a:hover,
+.site-footer__link:hover {
   color: var(--accent);
 }
 

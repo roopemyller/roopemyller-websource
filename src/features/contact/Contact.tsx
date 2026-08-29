@@ -2,6 +2,7 @@ import { useState, useRef, lazy, Suspense } from 'react';
 import type HCaptchaType from '@hcaptcha/react-hcaptcha';
 import { FaEnvelope, FaInstagram, FaGithub, FaTelegram, FaLinkedin } from 'react-icons/fa';
 import { useMode } from '../../app/ModeContext';
+import { useConsent } from '../../app/consent';
 import SectionReveal from '../../components/SectionReveal/SectionReveal';
 import styles from './Contact.module.css';
 
@@ -14,12 +15,18 @@ type FormField = 'name' | 'email' | 'message';
 
 export default function Contact() {
   const { meta } = useMode();
+  const { consent, save } = useConsent();
   const [formData, setFormData] = useState<Record<FormField, string>>({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [captchaReady, setCaptchaReady] = useState(false);
+  const [formTouched, setFormTouched] = useState(false);
   const captchaRef = useRef<HCaptchaType>(null);
+
+  // hCaptcha loads only after the visitor touches the form AND has allowed the
+  // spam-protection category in the cookie banner.
+  const captchaReady = formTouched && consent.captcha;
+  const enableCaptcha = () => save({ analytics: consent.analytics, captcha: true });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,7 +93,7 @@ export default function Contact() {
           className={styles.form}
           aria-label="Contact form"
           onSubmit={handleSubmit}
-          onFocus={() => setCaptchaReady(true)}
+          onFocus={() => setFormTouched(true)}
         >
           <label htmlFor="name" className="visually-hidden">
             Your Name
@@ -129,7 +136,7 @@ export default function Contact() {
             disabled={status === 'loading'}
           />
           <div className={styles.captchaContainer}>
-            {captchaReady && (
+            {captchaReady ? (
               <Suspense fallback={null}>
                 <HCaptcha
                   sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY}
@@ -138,6 +145,15 @@ export default function Contact() {
                   ref={captchaRef}
                 />
               </Suspense>
+            ) : (
+              formTouched && (
+                <p className={styles.captchaBlocked}>
+                  Spam protection (hCaptcha) is turned off, so this form can't be sent.{' '}
+                  <button type="button" onClick={enableCaptcha}>
+                    Enable hCaptcha
+                  </button>
+                </p>
+              )
             )}
           </div>
           <button type="submit" disabled={status === 'loading' || !captchaToken}>
@@ -146,8 +162,9 @@ export default function Contact() {
           {status === 'success' && <p className={styles.successMessage}>Message sent successfully! 🎉</p>}
           {status === 'error' && <p className={styles.errorMessage}>{errorMessage}</p>}
           <p className={styles.privacyNote}>
-            Your message is sent via Web3Forms and this form is protected by hCaptcha. See the{' '}
-            <a href="/privacy.html">privacy notice</a> for how your data is handled.
+            Your message is sent via Web3Forms, with hCaptcha for spam protection (loaded only with
+            your consent). See the <a href="/privacy.html">privacy notice</a> for how your data is
+            handled.
           </p>
         </form>
         <nav className={styles.socials} aria-label="Social links">

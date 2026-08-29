@@ -2,7 +2,10 @@ import './App.css';
 import { lazy, Suspense } from 'react';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import { ModeProvider, useMode } from './app/ModeContext';
+import { ConsentProvider, useConsent } from './app/consent';
+import Analytics from './app/Analytics';
 import Curtain from './app/Curtain';
+import CookieBanner from './components/CookieBanner/CookieBanner';
 import Navigation from './features/navigation/Navigation';
 import DeveloperMode from './features/developer/DeveloperMode';
 import Contact from './features/contact/Contact';
@@ -21,23 +24,37 @@ function ModeContent() {
   return <DeveloperMode />;
 }
 
+function SiteFooter() {
+  const { openPreferences } = useConsent();
+  return (
+    <footer className="site-footer">
+      <span>© {new Date().getFullYear()} Roope Myller</span>
+      <a href="/privacy.html">Privacy</a>
+      <button type="button" className="site-footer__link" onClick={openPreferences}>
+        Cookie settings
+      </button>
+    </footer>
+  );
+}
+
 export default function App() {
   return (
     <LazyMotion features={domAnimation} strict>
-      <ModeProvider>
-        <Curtain />
-        <Navigation />
-        <div className="app-container">
-          <Suspense fallback={null}>
-            <ModeContent />
-          </Suspense>
-          <Contact />
-          <footer className="site-footer">
-            <span>© {new Date().getFullYear()} Roope Myller</span>
-            <a href="/privacy.html">Privacy</a>
-          </footer>
-        </div>
-      </ModeProvider>
+      <ConsentProvider>
+        <ModeProvider>
+          <Curtain />
+          <Navigation />
+          <div className="app-container">
+            <Suspense fallback={null}>
+              <ModeContent />
+            </Suspense>
+            <Contact />
+            <SiteFooter />
+          </div>
+          <CookieBanner />
+          <Analytics />
+        </ModeProvider>
+      </ConsentProvider>
     </LazyMotion>
   );
 }

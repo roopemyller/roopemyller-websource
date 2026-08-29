@@ -1,6 +1,5 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { SpeedInsights } from '@vercel/speed-insights/react'
 // Latin-only subsets — the site is English/Finnish, so the cyrillic/greek/
 // vietnamese faces the bare `<weight>.css` entrypoints pull in are dead weight
 // (they were ~57% of the CSS bundle and ~60 unused font files).
@@ -42,6 +41,5 @@ window.addEventListener('DOMContentLoaded', () => {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-    <SpeedInsights />
   </StrictMode>,
 )
