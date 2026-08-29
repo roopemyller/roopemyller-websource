@@ -12,15 +12,18 @@ Package manager is **pnpm** (pnpm-lock.yaml is the source of truth; Vercel's `ve
 
 - `pnpm install` — install deps
 - `pnpm dev` — start Vite dev server
-- `pnpm build` — production build to `dist/` (runs `vite build` only — it does **not** type-check; run `npx tsc --noEmit` first if you want type errors caught before a build)
+- `pnpm build` — production build to `dist/` (runs `vite build` only — it does **not** type-check; run `pnpm typecheck` first if you want type errors caught before a build)
 - `pnpm preview` — serve the built `dist/` locally; use this to validate a production build before pushing, since dev (esbuild) and build (Rollup) can behave differently
 - `pnpm lint` — ESLint (flat config in `eslint.config.js`, TypeScript + react-hooks + react-refresh rules)
+- `pnpm typecheck` — `tsc --noEmit`
+- `pnpm test` — Vitest (jsdom) unit/component tests; `pnpm test:watch` for the watcher, `pnpm test:coverage` for a v8 report
+- `pnpm check` — lint + typecheck + test + build, the same gate `.github/workflows/ci.yml` runs on every PR
 
-There is no test suite/framework configured in this repo.
+Tests live next to the code they cover as `*.test.ts(x)`. Vitest config is the `test` block in `vite.config.ts`; `src/test/setup.ts` stubs the jsdom-missing browser APIs (`matchMedia` reports reduced-motion **on**, so components render their static DOM — assert that, not animations) and resets `localStorage`/`data-*` between tests. Coverage-worthy targets: pure helpers, the mode/consent context reducers, and the data files (`src/app/data.test.ts` checks every gallery photo has dimensions and a file on disk). Animation/scroll/visual behaviour is out of scope here — that's for a future Playwright layer.
 
 ### Deployment target
 
-The site deploys to **Vercel** via `vercel.json` (`framework: vite`, `npm run build`, output `dist`). `@vercel/speed-insights` is wired into `main.tsx` via `<SpeedInsights />`.
+The site deploys to **Vercel** via `vercel.json` (`framework: vite`, `npm run build`, output `dist`). `@vercel/speed-insights` renders via `src/app/Analytics.tsx`, which only mounts `<SpeedInsights />` once the visitor grants the analytics category in the cookie banner (`src/app/consent.tsx`).
 
 ## Architecture
 

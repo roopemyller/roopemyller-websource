@@ -25,10 +25,15 @@ Other useful commands:
 
 ```bash
 pnpm build        # production build to dist/ (does not type-check)
-npx tsc --noEmit  # type-check
-pnpm preview      # serve the production build locally
+pnpm typecheck    # tsc --noEmit
 pnpm lint         # ESLint
+pnpm test         # Vitest (jsdom) — unit/component tests
+pnpm preview      # serve the production build locally
+pnpm check        # lint + typecheck + test + build (same as the CI gate)
 ```
+
+Tests live beside the code as `*.test.ts(x)`. `.github/workflows/ci.yml` runs
+lint, type-check, tests and a production build on every pull request.
 
 ### Environment variables
 
