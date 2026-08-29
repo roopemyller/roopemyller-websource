@@ -33,7 +33,8 @@ pnpm check        # lint + typecheck + test + build (same as the CI gate)
 ```
 
 Tests live beside the code as `*.test.ts(x)`. `.github/workflows/ci.yml` runs
-lint, type-check, tests and a production build on every pull request.
+lint, type-check, tests and a production build on every pull request, and posts
+(and keeps updating) a summary comment on the PR with each step's result.
 
 ### Environment variables
 

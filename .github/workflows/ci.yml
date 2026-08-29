@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -25,16 +26,123 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install
+        id: install
+        run: pnpm install --frozen-lockfile
 
+      # Each check runs even if an earlier one failed, so the PR comment can
+      # report every result in one pass. The Verdict step re-fails the job.
       - name: Lint
+        id: lint
+        if: ${{ always() && steps.install.outcome == 'success' }}
         run: pnpm lint
 
       - name: Type-check
+        id: typecheck
+        if: ${{ always() && steps.install.outcome == 'success' }}
         run: pnpm typecheck
 
       - name: Unit tests
-        run: pnpm test
+        id: test
+        if: ${{ always() && steps.install.outcome == 'success' }}
+        env:
+          NO_COLOR: '1'
+        run: |
+          set -o pipefail
+          pnpm test 2>&1 | tee test-output.txt
 
       - name: Production build
+        id: build
+        if: ${{ always() && steps.install.outcome == 'success' }}
         run: pnpm build
+
+      - name: Report results
+        if: always()
+        continue-on-error: true
+        uses: actions/github-script@v7
+        env:
+          OUTCOME_INSTALL: ${{ steps.install.outcome }}
+          OUTCOME_LINT: ${{ steps.lint.outcome }}
+          OUTCOME_TYPECHECK: ${{ steps.typecheck.outcome }}
+          OUTCOME_TEST: ${{ steps.test.outcome }}
+          OUTCOME_BUILD: ${{ steps.build.outcome }}
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- ci-report -->';
+
+            const steps = [
+              ['Install', process.env.OUTCOME_INSTALL],
+              ['Lint', process.env.OUTCOME_LINT],
+              ['Type-check', process.env.OUTCOME_TYPECHECK],
+              ['Tests', process.env.OUTCOME_TEST],
+              ['Build', process.env.OUTCOME_BUILD],
+            ];
+            const icon = (o) =>
+              o === 'success' ? '✅' : o === 'failure' ? '❌' : o === 'skipped' ? '⏭️' : '▫️';
+            const passed = steps.every(([, o]) => o === 'success' || o === 'skipped' || !o);
+
+            let testSummary = '';
+            try {
+              const raw = fs.readFileSync('test-output.txt', 'utf8').replace(/\u001b\[[0-9;]*m/g, '');
+              testSummary = raw
+                .split('\n')
+                .filter((l) => /^\s*(Test Files|Tests|Duration)\b/.test(l))
+                .join('\n')
+                .trim();
+            } catch {}
+
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              marker,
+              `### ${passed ? '✅ CI passed' : '❌ CI failed'}`,
+              '',
+              '| Step | Result |',
+              '| --- | --- |',
+              ...steps.map(([name, o]) => `| ${name} | ${icon(o)} ${o || 'not run'} |`),
+              '',
+              testSummary ? '```\n' + testSummary + '\n```' : '',
+              `<sub>commit \`${context.sha.slice(0, 7)}\` · [full log](${runUrl})</sub>`,
+            ]
+              .filter((l) => l !== '')
+              .join('\n');
+
+            await core.summary.addRaw(body).write();
+
+            if (context.eventName !== 'pull_request') return;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find((c) => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Verdict
+        if: always()
+        run: |
+          fail=0
+          for s in "$OUTCOME_LINT" "$OUTCOME_TYPECHECK" "$OUTCOME_TEST" "$OUTCOME_BUILD"; do
+            [ "$s" = "success" ] || fail=1
+          done
+          [ "$fail" = "0" ] || { echo "::error::One or more checks failed"; exit 1; }
+        env:
+          OUTCOME_LINT: ${{ steps.lint.outcome }}
+          OUTCOME_TYPECHECK: ${{ steps.typecheck.outcome }}
+          OUTCOME_TEST: ${{ steps.test.outcome }}
+          OUTCOME_BUILD: ${{ steps.build.outcome }}
