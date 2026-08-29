@@ -61,6 +61,10 @@ html {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   scroll-behavior: smooth;
+  /* Offset scroll targets so the fixed nav doesn't cover a section's heading
+     when Navigation.tsx calls scrollIntoView({ block: 'start' }). Matches the
+     fixed nav height (~3.5rem min content + 0.85rem*2 padding) plus a gap. */
+  scroll-padding-top: 6rem;
 }
 
 html::-webkit-scrollbar {

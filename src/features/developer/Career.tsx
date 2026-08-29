@@ -39,6 +39,15 @@ export default function Career() {
                 </p>
               </div>
               {entry.description && <p className={styles.description}>{entry.description}</p>}
+              {entry.skills && (
+                <ul className={styles.skills} aria-label="Skills">
+                  {entry.skills.map((skill) => (
+                    <li key={skill} className={styles.skill}>
+                      {skill}
+                    </li>
+                  ))}
+                </ul>
+              )}
               {entry.positions && (
                 <ul className={styles.positions}>
                   {entry.positions.map((position) => (
@@ -47,6 +56,15 @@ export default function Career() {
                       <p className={styles.positionPeriod}>{position.period}</p>
                       {position.description && (
                         <p className={styles.positionDescription}>{position.description}</p>
+                      )}
+                      {position.skills && (
+                        <ul className={styles.skills} aria-label="Skills">
+                          {position.skills.map((skill) => (
+                            <li key={skill} className={styles.skill}>
+                              {skill}
+                            </li>
+                          ))}
+                        </ul>
                       )}
                     </li>
                   ))}

@@ -39,6 +39,9 @@
 .entry {
   position: relative;
   padding-left: 2rem;
+  /* flex item of the column .timeline — without this it won't shrink below its
+     content, letting a wide skill-chip row blow the card past the viewport */
+  min-width: 0;
 }
 
 .dot {
@@ -58,6 +61,8 @@
   box-shadow: var(--shadow-card), 0 0 0 1px var(--border);
   padding: 1.5rem 1.75rem;
   transition: box-shadow var(--transition-fast);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .card:hover {
@@ -107,9 +112,10 @@
   gap: 1rem;
 }
 
-.positions li {
+.positions > li {
   border-top: 1px solid var(--border);
   padding-top: 1rem;
+  min-width: 0;
 }
 
 .positionTitle {
@@ -128,6 +134,29 @@
   color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
+}
+
+.skills {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.skill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  line-height: 1;
+  font-weight: 600;
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  letter-spacing: 0.02em;
 }
 
 .linkedinWrap {

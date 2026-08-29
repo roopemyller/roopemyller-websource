@@ -48,6 +48,14 @@ export default function Navigation() {
   const sectionLinkRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [underlineRect, setUnderlineRect] = useState<Rect | null>(null);
 
+  // Clicking a nav link smooth-scrolls through every section in between, and the
+  // IntersectionObserver below would fire for each one — making the underline
+  // bounce (target → about → career → target). While a programmatic scroll is
+  // in flight we pin the clicked section and ignore observer updates until the
+  // scroll settles (`scrollend`, or a timeout fallback for Safari / no-op scrolls).
+  const programmaticScrollRef = useRef(false);
+  const scrollSettleTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
   const updateUnderlineRect = () => {
     if (!activeSectionId) return;
     const btn = sectionLinkRefs.current[activeSectionId];
@@ -121,6 +129,7 @@ export default function Navigation() {
     setActiveSectionId(activeSections[0]?.id);
     const observer = new IntersectionObserver(
       (entries) => {
+        if (programmaticScrollRef.current) return;
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveSectionId(entry.target.id);
@@ -144,9 +153,27 @@ export default function Navigation() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
+  useEffect(() => {
+    const releaseGuard = () => {
+      programmaticScrollRef.current = false;
+    };
+    window.addEventListener('scrollend', releaseGuard);
+    return () => {
+      window.removeEventListener('scrollend', releaseGuard);
+      clearTimeout(scrollSettleTimer.current);
+    };
+  }, []);
+
   const scrollToSection = (sectionId: string) => {
     setIsOpen(false);
     setActiveSectionId(sectionId);
+    programmaticScrollRef.current = true;
+    clearTimeout(scrollSettleTimer.current);
+    // Fallback: 'scrollend' is unsupported in Safari, and never fires when the
+    // page is already at the target (nothing to scroll).
+    scrollSettleTimer.current = setTimeout(() => {
+      programmaticScrollRef.current = false;
+    }, 1200);
     if (sectionId === 'hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
