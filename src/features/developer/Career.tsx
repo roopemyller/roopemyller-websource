@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
 import { FaLinkedin } from 'react-icons/fa';
 import career from './career';
 import SectionReveal from '../../components/SectionReveal/SectionReveal';
+import Reveal from '../../components/Reveal/Reveal';
 import styles from './Career.module.css';
 
 export default function Career() {
@@ -15,13 +15,11 @@ export default function Career() {
 
       <ol className={styles.timeline}>
         {career.map((entry, idx) => (
-          <motion.li
+          <Reveal
+            as="li"
             key={`${entry.organization}-${entry.period}`}
             className={styles.entry}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
+            index={idx}
           >
             <span className={styles.dot} aria-hidden="true" />
             <div className={styles.card}>
@@ -71,7 +69,7 @@ export default function Career() {
                 </ul>
               )}
             </div>
-          </motion.li>
+          </Reveal>
         ))}
       </ol>
 

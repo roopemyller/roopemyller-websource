@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import Lightbox from '../Lightbox/Lightbox';
 import type { Photo } from './types';
 import styles from './Gallery.module.css';
@@ -26,7 +26,7 @@ export default function Gallery({ photos }: GalleryProps) {
     <>
       <div className={styles.grid}>
         {photos.map((photo, idx) => (
-          <motion.button
+          <m.button
             key={photo.src}
             type="button"
             className={styles.item}
@@ -37,7 +37,7 @@ export default function Gallery({ photos }: GalleryProps) {
           >
             <img src={photo.src} alt={photo.alt} loading="lazy" />
             {photo.caption && <span className={styles.caption}>{photo.caption}</span>}
-          </motion.button>
+          </m.button>
         ))}
       </div>
       <Lightbox photos={photos} activeIndex={activeIndex} onClose={handleClose} onNavigate={setActiveIndex} />

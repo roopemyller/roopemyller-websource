@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, m, useReducedMotion } from 'framer-motion';
 import { useMode } from './ModeContext';
 import styles from './Curtain.module.css';
 
@@ -9,7 +9,7 @@ export default function Curtain() {
   return (
     <AnimatePresence>
       {isTransitioning && (
-        <motion.div
+        <m.div
           className={styles.curtain}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

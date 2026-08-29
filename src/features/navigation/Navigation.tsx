@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useMode } from '../../app/ModeContext';
 import { MODE_ORDER, MODES, type Mode } from '../../app/modes';
 import styles from './Navigation.module.css';
@@ -24,7 +24,6 @@ export default function Navigation() {
   // document flow — inside a fixed element that's wrong, so the pill animated
   // in from an offset equal to however far the page had been scrolled. Explicit
   // offsetLeft/offsetTop measurement is scroll-position-independent by construction.
-  const modeSwitcherRef = useRef<HTMLDivElement>(null);
   const modeButtonRefs = useRef<Partial<Record<Mode, HTMLButtonElement>>>({});
   const [pillRect, setPillRect] = useState<Rect | null>(null);
 
@@ -102,7 +101,6 @@ export default function Navigation() {
     };
     el.addEventListener('transitionend', handleTransitionEnd);
     return () => el.removeEventListener('transitionend', handleTransitionEnd);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -192,9 +190,9 @@ export default function Navigation() {
         {MODES[mode].label} mode active
       </span>
       <div className={styles.navContainer}>
-        <div ref={modeSwitcherRef} className={styles.modeSwitcher} role="tablist" aria-label="Portfolio mode">
+        <div className={styles.modeSwitcher} role="tablist" aria-label="Portfolio mode">
           {pillRect && (
-            <motion.span
+            <m.span
               className={styles.modePill}
               animate={{ left: pillRect.left, top: pillRect.top, width: pillRect.width, height: pillRect.height }}
               transition={{ type: 'spring', stiffness: 380, damping: 32 }}
@@ -236,7 +234,7 @@ export default function Navigation() {
 
         <ul ref={navListRef} className={`${styles.navList} ${isOpen ? styles.navListOpen : ''}`}>
           {underlineRect && (
-            <motion.span
+            <m.span
               className={styles.underline}
               animate={{
                 left: underlineRect.left,

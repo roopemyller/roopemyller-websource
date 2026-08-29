@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
 import results from './results';
 import StatCounter from '../../components/StatCounter/StatCounter';
 import SectionReveal from '../../components/SectionReveal/SectionReveal';
+import Reveal from '../../components/Reveal/Reveal';
 import styles from './Results.module.css';
 
 const podiumCount = results.filter((r) => /^1st|^2nd|^3rd/.test(r.placement)).length;
@@ -20,13 +20,13 @@ export default function Results() {
       </SectionReveal>
       <div className={styles.list}>
         {results.map((result, idx) => (
-          <motion.article
+          <Reveal
+            as="article"
             key={result.id}
             className={styles.card}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: (idx % 3) * 0.06, ease: [0.16, 1, 0.3, 1] }}
+            index={idx % 3}
+            amount={0.3}
+            y={20}
             whileHover={{ y: -6 }}
           >
             <div className={styles.cardHead}>
@@ -39,7 +39,7 @@ export default function Results() {
               {result.location && ` · ${result.location}`}
             </p>
             {result.notes && <p className={styles.notes}>{result.notes}</p>}
-          </motion.article>
+          </Reveal>
         ))}
       </div>
     </section>

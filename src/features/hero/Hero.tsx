@@ -1,5 +1,6 @@
-import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { m, useReducedMotion, type Variants } from 'framer-motion';
 import { useMode } from '../../app/ModeContext';
+import { EASE_OUT } from '../../app/motion';
 import styles from './Hero.module.css';
 
 const containerVariants: Variants = {
@@ -9,40 +10,42 @@ const containerVariants: Variants = {
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_OUT } },
 };
 
 export default function Hero() {
   const { meta } = useMode();
   const reduceMotion = useReducedMotion();
+  // One place to branch on reduced motion instead of a ternary per element.
+  const item = reduceMotion ? undefined : itemVariants;
 
   return (
     <section className={styles.hero} id="hero" aria-label="Hero section">
-      <motion.div
+      <m.div
         className={styles.content}
         initial={reduceMotion ? false : 'hidden'}
         animate={reduceMotion ? false : 'visible'}
         variants={reduceMotion ? undefined : containerVariants}
       >
-        <motion.img
-          variants={reduceMotion ? undefined : itemVariants}
+        <m.img
+          variants={item}
           src="https://avatars.githubusercontent.com/u/22277901?v=4"
           alt="Portrait of Roope Myller"
           className={styles.avatar}
           width={160}
           height={160}
         />
-        <motion.p variants={reduceMotion ? undefined : itemVariants} className={styles.eyebrow}>
+        <m.p variants={item} className={styles.eyebrow}>
           {meta.heroEyebrow}
-        </motion.p>
-        <motion.h1 variants={reduceMotion ? undefined : itemVariants} tabIndex={0}>
+        </m.p>
+        <m.h1 variants={item} tabIndex={0}>
           {meta.heroTitle}
-        </motion.h1>
-        <motion.h2 variants={reduceMotion ? undefined : itemVariants}>{meta.heroSubtitle}</motion.h2>
-        <motion.p variants={reduceMotion ? undefined : itemVariants} className={styles.tagline}>
+        </m.h1>
+        <m.h2 variants={item}>{meta.heroSubtitle}</m.h2>
+        <m.p variants={item} className={styles.tagline}>
           {meta.heroTagline}
-        </motion.p>
-      </motion.div>
+        </m.p>
+      </m.div>
     </section>
   );
 }

@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
 import education, { upcomingThesis } from './education';
 import SectionReveal from '../../components/SectionReveal/SectionReveal';
+import Reveal from '../../components/Reveal/Reveal';
 import styles from './Academics.module.css';
 
 export default function Academics() {
@@ -13,13 +13,7 @@ export default function Academics() {
       </SectionReveal>
 
       <div className={styles.list}>
-        <motion.article
-          className={`${styles.card} ${styles.upcoming}`}
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        >
+        <Reveal as="article" className={`${styles.card} ${styles.upcoming}`}>
           <span className={styles.badge}>Topic open</span>
           <h3>Master&apos;s Thesis</h3>
           <p className={styles.period}>{upcomingThesis.period}</p>
@@ -30,16 +24,14 @@ export default function Academics() {
             ))}
           </ul>
           <p className={styles.seekingNote}>{upcomingThesis.seekingNote}</p>
-        </motion.article>
+        </Reveal>
 
         {education.map((entry, idx) => (
-          <motion.article
+          <Reveal
+            as="article"
             key={entry.institution + entry.period}
             className={`${styles.card} ${entry.badge ? styles.upcoming : ''}`}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5, delay: (idx + 1) * 0.06, ease: [0.16, 1, 0.3, 1] }}
+            index={idx + 1}
           >
             {entry.badge && <span className={styles.badge}>{entry.badge}</span>}
             <h3>{entry.institution}</h3>
@@ -70,7 +62,7 @@ export default function Academics() {
                 )}
               </div>
             )}
-          </motion.article>
+          </Reveal>
         ))}
       </div>
     </section>

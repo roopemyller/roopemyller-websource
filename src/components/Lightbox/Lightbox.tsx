@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 import type { Photo } from '../Gallery/types';
+import { EASE_OUT } from '../../app/motion';
 import styles from './Lightbox.module.css';
 
 interface LightboxProps {
@@ -15,6 +16,9 @@ interface LightboxProps {
 export default function Lightbox({ photos, activeIndex, onClose, onNavigate }: LightboxProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  // Cached once per open — the focusable set doesn't change while the lightbox
+  // is mounted, so there's no need to re-query it on every Tab keypress.
+  const focusablesRef = useRef<NodeListOf<HTMLElement> | null>(null);
   const isOpen = activeIndex !== null;
   const photo = isOpen ? photos[activeIndex] : null;
 
@@ -32,6 +36,10 @@ export default function Lightbox({ photos, activeIndex, onClose, onNavigate }: L
     if (!isOpen) return;
     closeButtonRef.current?.focus();
     document.body.style.overflow = 'hidden';
+    focusablesRef.current =
+      containerRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], [tabindex]:not([tabindex="-1"])'
+      ) ?? null;
 
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -41,10 +49,8 @@ export default function Lightbox({ photos, activeIndex, onClose, onNavigate }: L
       if (e.key === 'ArrowLeft') goPrev();
       if (e.key === 'ArrowRight') goNext();
       if (e.key === 'Tab' && containerRef.current) {
-        const focusables = containerRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusables.length === 0) return;
+        const focusables = focusablesRef.current;
+        if (!focusables || focusables.length === 0) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
         if (e.shiftKey && document.activeElement === first) {
@@ -67,7 +73,7 @@ export default function Lightbox({ photos, activeIndex, onClose, onNavigate }: L
   return createPortal(
     <AnimatePresence>
       {photo && (
-        <motion.div
+        <m.div
           ref={containerRef}
           className={styles.backdrop}
           role="dialog"
@@ -79,17 +85,17 @@ export default function Lightbox({ photos, activeIndex, onClose, onNavigate }: L
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
         >
-          <motion.figure
+          <m.figure
             className={styles.frame}
             onClick={(e) => e.stopPropagation()}
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.94 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.2, ease: EASE_OUT }}
           >
             <img src={photo.src} alt={photo.alt} />
             {photo.caption && <figcaption className={styles.caption}>{photo.caption}</figcaption>}
-          </motion.figure>
+          </m.figure>
           <button
             ref={closeButtonRef}
             type="button"
@@ -128,7 +134,7 @@ export default function Lightbox({ photos, activeIndex, onClose, onNavigate }: L
               </button>
             </>
           )}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>,
     document.body

@@ -1,4 +1,13 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { MODE_ORDER, MODES, type Mode, type ModeMeta } from './modes';
 
 const DEFAULT_MODE: Mode = 'developer';
@@ -45,6 +54,10 @@ export function ModeProvider({ children }: { children: ReactNode }) {
   const [mode, setModeInternal] = useState<Mode>(() => readModeFromLocation());
   const [isTransitioning, setIsTransitioning] = useState(false);
   const pendingModeRef = useRef<Mode | null>(null);
+  // Mirror of `mode` so the stable callbacks below can read the current value
+  // without listing `mode` as a dependency (which would re-create them every switch).
+  const modeRef = useRef(mode);
+  modeRef.current = mode;
 
   useEffect(() => {
     document.documentElement.setAttribute('data-mode', mode);
@@ -57,7 +70,7 @@ export function ModeProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const transitionTo = (next: Mode) => {
+  const transitionTo = useCallback((next: Mode) => {
     pendingModeRef.current = next;
     setIsTransitioning(true);
 
@@ -70,32 +83,35 @@ export function ModeProvider({ children }: { children: ReactNode }) {
         setIsTransitioning(false);
       }, CURTAIN_HOLD_MS);
     }, CURTAIN_FADE_MS);
-  };
+  }, []);
 
-  const setMode = (next: Mode) => {
-    if (next === mode || pendingModeRef.current === next) return;
-    window.history.pushState({ mode: next }, '', urlForMode(next));
-    transitionTo(next);
-  };
+  const setMode = useCallback(
+    (next: Mode) => {
+      if (next === modeRef.current || pendingModeRef.current === next) return;
+      window.history.pushState({ mode: next }, '', urlForMode(next));
+      transitionTo(next);
+    },
+    [transitionTo]
+  );
 
   // Keeps the back/forward buttons working now that mode switches push history entries.
   useEffect(() => {
     const handlePopState = () => {
       const next = readModeFromLocation();
-      if (next !== mode && pendingModeRef.current !== next) {
+      if (next !== modeRef.current && pendingModeRef.current !== next) {
         transitionTo(next);
       }
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
+  }, [transitionTo]);
 
-  return (
-    <ModeContext.Provider value={{ mode, meta: MODES[mode], setMode, isTransitioning }}>
-      {children}
-    </ModeContext.Provider>
+  const value = useMemo<ModeContextValue>(
+    () => ({ mode, meta: MODES[mode], setMode, isTransitioning }),
+    [mode, setMode, isTransitioning]
   );
+
+  return <ModeContext.Provider value={value}>{children}</ModeContext.Provider>;
 }
 
 export function useMode(): ModeContextValue {

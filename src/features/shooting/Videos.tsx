@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
 import { FaYoutube } from 'react-icons/fa';
 import SectionReveal from '../../components/SectionReveal/SectionReveal';
+import Reveal from '../../components/Reveal/Reveal';
 import videos, { YOUTUBE_CHANNEL_URL } from './videos';
 import styles from './Videos.module.css';
 
@@ -14,14 +14,7 @@ export default function Videos() {
       </SectionReveal>
       <div className={styles.grid}>
         {videos.map((video, idx) => (
-          <motion.div
-            key={video.title}
-            className={styles.card}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <Reveal key={video.title} className={styles.card} index={idx} stagger={0.08} amount={0.3} y={20}>
             {video.id ? (
               <iframe
                 className={styles.frame}
@@ -38,7 +31,7 @@ export default function Videos() {
               </div>
             )}
             <p className={styles.caption}>{video.title}</p>
-          </motion.div>
+          </Reveal>
         ))}
       </div>
       <a className={styles.channelLink} href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer">

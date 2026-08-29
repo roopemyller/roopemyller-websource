@@ -1,11 +1,17 @@
 import './App.css';
+import { lazy, Suspense } from 'react';
+import { LazyMotion, domAnimation } from 'framer-motion';
 import { ModeProvider, useMode } from './app/ModeContext';
 import Curtain from './app/Curtain';
 import Navigation from './features/navigation/Navigation';
 import DeveloperMode from './features/developer/DeveloperMode';
-import PhotographyMode from './features/photography/PhotographyMode';
-import ShootingMode from './features/shooting/ShootingMode';
 import Contact from './features/contact/Contact';
+
+// Developer is the default mode and renders on first paint; the other two are
+// split out so their Gallery/Lightbox/icon payload isn't in the initial bundle.
+// The curtain covers the swap, so a null fallback is invisible.
+const PhotographyMode = lazy(() => import('./features/photography/PhotographyMode'));
+const ShootingMode = lazy(() => import('./features/shooting/ShootingMode'));
 
 function ModeContent() {
   const { mode } = useMode();
@@ -17,13 +23,17 @@ function ModeContent() {
 
 export default function App() {
   return (
-    <ModeProvider>
-      <Curtain />
-      <Navigation />
-      <div className="app-container">
-        <ModeContent />
-        <Contact />
-      </div>
-    </ModeProvider>
+    <LazyMotion features={domAnimation} strict>
+      <ModeProvider>
+        <Curtain />
+        <Navigation />
+        <div className="app-container">
+          <Suspense fallback={null}>
+            <ModeContent />
+          </Suspense>
+          <Contact />
+        </div>
+      </ModeProvider>
+    </LazyMotion>
   );
 }

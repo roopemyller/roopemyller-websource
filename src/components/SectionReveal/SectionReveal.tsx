@@ -1,5 +1,6 @@
-import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { m, useReducedMotion, type Variants } from 'framer-motion';
 import type { ReactNode } from 'react';
+import { EASE_OUT } from '../../app/motion';
 
 interface SectionRevealProps {
   children: ReactNode;
@@ -20,15 +21,15 @@ export default function SectionReveal({ children, delay = 0, className }: Sectio
   }
 
   return (
-    <motion.div
+    <m.div
       className={className}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={variants}
-      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay, ease: EASE_OUT }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

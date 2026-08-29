@@ -94,10 +94,8 @@ body::before {
     radial-gradient(circle at 80% 20%, rgba(var(--accent-2-rgb), 0.6) 0%, transparent 50%),
     radial-gradient(circle at 20% 80%, rgba(var(--accent-rgb), 0.6) 0%, transparent 50%);
   opacity: 0.08;
-  animation: gridBG 16s linear infinite;
   background-position: var(--parallax-bg-pos, 0 0, 0 0, 0 0);
-  will-change: background-position;
-  transition: background-position 0.1s linear, opacity var(--transition-mode);
+  transition: opacity var(--transition-mode);
 }
 
 .app-container {
@@ -106,26 +104,6 @@ body::before {
   overflow-x: hidden;
   position: relative;
   z-index: 1;
-}
-
-@media (max-width: 768px) {
-  .app-container {
-    padding: 0;
-  }
-}
-
-/* Parallax background scroll effect */
-html.has-parallax-bg body::before {
-  animation: none !important;
-}
-
-@keyframes gridBG {
-  0% {
-    background-position: 0 0, 0 0, 0 0;
-  }
-  100% {
-    background-position: 160px 160px, 0 0, 0 0;
-  }
 }
 
 /*
@@ -147,9 +125,5 @@ html.has-parallax-bg body::before {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  body::before {
-    animation: none !important;
   }
 }
