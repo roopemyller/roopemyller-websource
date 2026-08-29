@@ -1,17 +1,25 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, lazy, Suspense } from 'react';
+import type HCaptchaType from '@hcaptcha/react-hcaptcha';
 import { FaEnvelope, FaInstagram, FaGithub, FaTelegram, FaLinkedin } from 'react-icons/fa';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useMode } from '../../app/ModeContext';
 import SectionReveal from '../../components/SectionReveal/SectionReveal';
 import styles from './Contact.module.css';
 
+// hCaptcha injects a ~200 KB third-party script + iframe on mount. Load it only
+// once the visitor actually interacts with the form (privacy + performance), and
+// split the wrapper out of the main bundle.
+const HCaptcha = lazy(() => import('@hcaptcha/react-hcaptcha'));
+
+type FormField = 'name' | 'email' | 'message';
+
 export default function Contact() {
   const { meta } = useMode();
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState<Record<FormField, string>>({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const captchaRef = useRef<HCaptcha>(null);
+  const [captchaReady, setCaptchaReady] = useState(false);
+  const captchaRef = useRef<HCaptchaType>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,7 +72,7 @@ export default function Contact() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
@@ -74,12 +82,18 @@ export default function Contact() {
           Contact
         </h2>
         <p className={styles.prompt}>{meta.contactPrompt}</p>
-        <form className={styles.form} aria-label="Contact form" onSubmit={handleSubmit}>
+        <form
+          className={styles.form}
+          aria-label="Contact form"
+          onSubmit={handleSubmit}
+          onFocus={() => setCaptchaReady(true)}
+        >
           <label htmlFor="name" className="visually-hidden">
             Your Name
           </label>
           <input
             id="name"
+            name="name"
             type="text"
             placeholder="Your Name"
             required
@@ -93,6 +107,7 @@ export default function Contact() {
           </label>
           <input
             id="email"
+            name="email"
             type="email"
             placeholder="Your Email"
             required
@@ -106,6 +121,7 @@ export default function Contact() {
           </label>
           <textarea
             id="message"
+            name="message"
             placeholder="Your Message"
             required
             value={formData.message}
@@ -113,18 +129,26 @@ export default function Contact() {
             disabled={status === 'loading'}
           />
           <div className={styles.captchaContainer}>
-            <HCaptcha
-              sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY}
-              onVerify={(token) => setCaptchaToken(token)}
-              onExpire={() => setCaptchaToken(null)}
-              ref={captchaRef}
-            />
+            {captchaReady && (
+              <Suspense fallback={null}>
+                <HCaptcha
+                  sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY}
+                  onVerify={(token) => setCaptchaToken(token)}
+                  onExpire={() => setCaptchaToken(null)}
+                  ref={captchaRef}
+                />
+              </Suspense>
+            )}
           </div>
           <button type="submit" disabled={status === 'loading' || !captchaToken}>
             {status === 'loading' ? 'Sending...' : 'Send'}
           </button>
           {status === 'success' && <p className={styles.successMessage}>Message sent successfully! 🎉</p>}
           {status === 'error' && <p className={styles.errorMessage}>{errorMessage}</p>}
+          <p className={styles.privacyNote}>
+            Your message is sent via Web3Forms and this form is protected by hCaptcha. See the{' '}
+            <a href="/privacy.html">privacy notice</a> for how your data is handled.
+          </p>
         </form>
         <nav className={styles.socials} aria-label="Social links">
           <a href="mailto:roope.myller@gmail.com" aria-label="Email">

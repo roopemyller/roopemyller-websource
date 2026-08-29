@@ -45,7 +45,10 @@
 
 .card img {
   width: 100%;
+  height: auto;
   max-width: 280px;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
   border-radius: var(--radius-sm);
   margin-bottom: 1.2rem;
   background: var(--surface-alt);

@@ -93,7 +93,13 @@ export default function Lightbox({ photos, activeIndex, onClose, onNavigate }: L
             exit={{ opacity: 0, scale: 0.94 }}
             transition={{ duration: 0.2, ease: EASE_OUT }}
           >
-            <img src={photo.src} alt={photo.alt} />
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              width={photo.width}
+              height={photo.height}
+              decoding="async"
+            />
             {photo.caption && <figcaption className={styles.caption}>{photo.caption}</figcaption>}
           </m.figure>
           <button

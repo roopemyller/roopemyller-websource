@@ -107,6 +107,28 @@ body::before {
   z-index: 1;
 }
 
+.site-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 2rem 1.5rem 3rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border);
+}
+
+.site-footer a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.site-footer a:hover {
+  color: var(--accent);
+}
+
 /*
   Visually hidden utility class for accessibility (screen readers only)
   Usage: <span className="visually-hidden">Text</span>

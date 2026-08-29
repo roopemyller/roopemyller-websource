@@ -32,6 +32,10 @@ export default function App() {
             <ModeContent />
           </Suspense>
           <Contact />
+          <footer className="site-footer">
+            <span>© {new Date().getFullYear()} Roope Myller</span>
+            <a href="/privacy.html">Privacy</a>
+          </footer>
         </div>
       </ModeProvider>
     </LazyMotion>

@@ -29,11 +29,12 @@ export default function Hero() {
       >
         <m.img
           variants={item}
-          src="https://avatars.githubusercontent.com/u/22277901?v=4"
+          src="/avatar.jpg"
           alt="Portrait of Roope Myller"
           className={styles.avatar}
           width={160}
           height={160}
+          fetchPriority="high"
         />
         <m.p variants={item} className={styles.eyebrow}>
           {meta.heroEyebrow}

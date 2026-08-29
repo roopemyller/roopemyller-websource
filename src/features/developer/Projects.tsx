@@ -26,7 +26,14 @@ export default function Projects() {
             amount={0.3}
             whileHover={{ y: -8 }}
           >
-            <img src={project.image} alt={project.title} loading="lazy" />
+            <img
+              src={project.image}
+              alt={project.title}
+              loading="lazy"
+              decoding="async"
+              width={1200}
+              height={600}
+            />
             <h3>{project.title}</h3>
             <p>{project.description}</p>
             <span className={styles.link}>View Project</span>

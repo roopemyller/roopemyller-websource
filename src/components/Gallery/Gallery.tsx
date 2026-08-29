@@ -35,7 +35,14 @@ export default function Gallery({ photos }: GalleryProps) {
             whileTap={{ scale: 0.98 }}
             aria-label={`View photo: ${photo.alt}`}
           >
-            <img src={photo.src} alt={photo.alt} loading="lazy" />
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              loading="lazy"
+              decoding="async"
+              width={photo.width}
+              height={photo.height}
+            />
             {photo.caption && <span className={styles.caption}>{photo.caption}</span>}
           </m.button>
         ))}

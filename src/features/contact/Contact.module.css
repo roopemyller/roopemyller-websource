@@ -95,6 +95,18 @@
   text-align: center;
 }
 
+.privacyNote {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.privacyNote a {
+  color: var(--accent);
+}
+
 .socials {
   display: flex;
   justify-content: center;
